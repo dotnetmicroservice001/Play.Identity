@@ -47,6 +47,7 @@ namespace Play.Identity.Service
                 })
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddInMemoryApiScopes(identityServerSettings.ApiScopes)
+                .AddInMemoryApiResources(identityServerSettings.ApiResources)
                 .AddInMemoryClients(identityServerSettings.Clients)
                 .AddInMemoryIdentityResources(identityServerSettings.IdentityResources); 
             
