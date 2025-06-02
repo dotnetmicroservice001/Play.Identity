@@ -49,9 +49,9 @@ namespace Play.Identity.Service
                 .AddInMemoryApiScopes(identityServerSettings.ApiScopes)
                 .AddInMemoryApiResources(identityServerSettings.ApiResources)
                 .AddInMemoryClients(identityServerSettings.Clients)
-                .AddInMemoryIdentityResources(identityServerSettings.IdentityResources); 
-            
-            
+                .AddInMemoryIdentityResources(identityServerSettings.IdentityResources);
+
+            services.AddLocalApiAuthentication();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
