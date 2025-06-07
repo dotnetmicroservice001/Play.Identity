@@ -30,17 +30,14 @@ namespace Play.Identity.Service.Areas.Identity.Pages.Account
             _interaction = interaction;
         }
 
-        public async Task<IActionResult> OnGet(string LogoutId)
+        public async Task<IActionResult> OnGet(string logoutId)
         {
-            var context = await _interaction.GetLogoutContextAsync(LogoutId);
+            var context = await _interaction.GetLogoutContextAsync(logoutId);
             if (context?.ShowSignoutPrompt == false)
             {
-                return await this.OnPost(context.PostLogoutRedirectUri);
+                return await OnPost(context.PostLogoutRedirectUri);
             }
-            else
-            {
-                return RedirectToPage();
-            }
+            return Page();
         }
         
         
