@@ -4,8 +4,13 @@ namespace Play.Identity.Service.Exception;
 
 public class UnknownUserException : System.Exception 
 {
-        public UnknownUserException(Guid messageUserId)
+        public UnknownUserException(Guid UserId)
+        : base($"Unknown user: {UserId}")
         {
-            throw new NotImplementedException();
+            this.UserId = UserId; 
         }
+        
+        public Guid UserId { get; }
+        
+       
 }

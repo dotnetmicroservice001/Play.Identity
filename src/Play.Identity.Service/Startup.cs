@@ -1,4 +1,5 @@
 using System;
+using GreenPipes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,8 +9,10 @@ using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using Play.Common.MassTransit;
 using Play.Common.Settings;
 using Play.Identity.Service.Entities;
+using Play.Identity.Service.Exception;
 using Play.Identity.Service.HostedServices;
 using Play.Identity.Service.Settings;
 
@@ -34,6 +37,7 @@ namespace Play.Identity.Service
             var mongoDbSettings = Configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
             var identityServerSettings = Configuration.GetSection("IdentityServerSettings").Get<IdentityServerSettings>(); 
             
+            
             services.Configure<IdentitySettings>(Configuration.GetSection(nameof(IdentitySettings)))
                 .AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<ApplicationRole>()
@@ -42,6 +46,13 @@ namespace Play.Identity.Service
                     serviceSettings.ServiceName
                     );
 
+            services.AddMassTransitWithRabbitMQ(retryConfigurator =>
+            {
+                retryConfigurator.Interval(3, TimeSpan.FromSeconds(5));
+                retryConfigurator.Ignore(typeof(UnknownUserException));
+                retryConfigurator.Ignore(typeof(InsufficientFundException));
+            });
+            
             services.AddIdentityServer(options =>
                 {
                     options.Events.RaiseErrorEvents = true;
