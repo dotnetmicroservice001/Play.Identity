@@ -33,11 +33,8 @@ public class DebitGilConsumer : IConsumer
         {
             throw new InsufficientFundException(message.UserId, message.Gil);
         }
-        
         await _userManager.UpdateAsync(user);
-
         await context.Publish(new GilDebited(message.CorrelationId)); 
-        
     }
 }
 
