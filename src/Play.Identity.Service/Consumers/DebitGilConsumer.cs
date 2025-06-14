@@ -9,7 +9,7 @@ using Play.Identity.Service.Exception;
 
 namespace Play.Identity.Service.Consumers;
 
-public class DebitGilConsumer : IConsumer
+public class DebitGilConsumer : IConsumer<DebitGil>
 {
     private readonly UserManager<ApplicationUser> _userManager;
 
