@@ -6,4 +6,9 @@
     
     // event type message 
     public record GilDebited(Guid CorrelationId);
+
+    public record UserUpdated(
+        Guid UserId,
+        string Email, 
+        decimal newTotalGil); 
     

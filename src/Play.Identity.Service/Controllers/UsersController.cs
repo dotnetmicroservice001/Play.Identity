@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Duende.IdentityServer;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Play.Identity.Contracts;
 using Play.Identity.Service.Entities;
 
 namespace Play.Identity.Service.Controllers;
@@ -16,10 +18,11 @@ namespace Play.Identity.Service.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
-
-    public UsersController(UserManager<ApplicationUser> userManager)
+    private readonly IPublishEndpoint  _publishEndpoint;
+    public UsersController(UserManager<ApplicationUser> userManager, IPublishEndpoint publishEndpoint)
     {
         _userManager = userManager;
+        _publishEndpoint = publishEndpoint;
     }
 
     [HttpGet]
@@ -55,6 +58,9 @@ public class UsersController : ControllerBase
         user.UserName = updateUserDto.Email;
         user.Gil = updateUserDto.Gil;
         await _userManager.UpdateAsync(user);
+        // sending as an event
+        await _publishEndpoint.Publish( new UserUpdated(
+            user.Id, user.Email, user.Gil));
         return NoContent();
     }
         
@@ -68,6 +74,8 @@ public class UsersController : ControllerBase
             return NotFound();
         }
         await _userManager.DeleteAsync(user);
+        await _publishEndpoint.Publish( new UserUpdated(
+            user.Id, user.Email, 0));
         return NoContent();
     }
 }
