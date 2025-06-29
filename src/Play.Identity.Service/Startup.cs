@@ -1,7 +1,10 @@
 using System;
+using System.IO;
+using System.Reflection;
 using GreenPipes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -58,6 +61,7 @@ namespace Play.Identity.Service
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseErrorEvents = true;
+                    options.KeyManagement.KeyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 })
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddInMemoryApiScopes(identityServerSettings.ApiScopes)
@@ -97,9 +101,11 @@ namespace Play.Identity.Service
             
             // after routing and before authorizing, we insert identity server middleware
             app.UseIdentityServer();
-            
             app.UseAuthorization();
-
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Lax
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
