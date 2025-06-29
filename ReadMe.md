@@ -17,3 +17,18 @@ It uses **OAuth 2.0**, **OpenID Connect**, and **PKCE** to securely authenticate
 - Duende IdentityServer
 - OAuth 2.0 + OpenID Connect
 - PKCE
+
+## Creating and Publishing Package
+```bash
+version="1.0.2"
+owner="dotnetmicroservice001"
+gh_pat="[YOUR_PERSONAL_ACCESS_TOKEN]"
+
+dotnet pack src/Play.Identity.Contracts --configuration Release \
+  -p:PackageVersion="$version" \
+  -p:RepositoryUrl="https://github.com/$owner/Play.Identity" \
+  -o ../Packages
+  
+dotnet nuget push ../Packages/Play.Identity.Contracts.$version.nupkg --api-key $gh_pat \
+--source "github"
+```

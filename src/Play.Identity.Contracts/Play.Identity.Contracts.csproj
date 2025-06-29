@@ -2,6 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        <ProjectDescription>
+            Defines event and command message contracts for the Identity microservice in the Play Economy system.
+            Supports user addition updates and in-game currency (Gil) debits for integration with other services.
+        </ProjectDescription>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
