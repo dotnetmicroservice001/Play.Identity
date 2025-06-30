@@ -38,5 +38,10 @@ dotnet nuget push ../Packages/Play.Identity.Contracts.$version.nupkg --api-key $
 export GH_OWNER=dotnetmicroservice001
 export GH_PAT="ghp_YourRealPATHere"
 docker build --secret id=GH_OWNER --secret id=GH_PAT -t play.identity:$version .
+```
 
+## Run Docker Image 
+```bash 
+export adminPass="password here"
+docker run -it --rm -p 5002:5002 --name identity -e MongoDbSettings__Host=mongo -e RabbitMQSettings__Host=rabbitmq -e IdentityServerSettings__AdminUserPassword=$adminPass --network playinfra_default play.identity:$version
 ```
