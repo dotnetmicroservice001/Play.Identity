@@ -20,7 +20,7 @@ It uses **OAuth 2.0**, **OpenID Connect**, and **PKCE** to securely authenticate
 
 ## Creating and Publishing Package
 ```bash
-version="1.0.2"
+version="1.0.3"
 owner="dotnetmicroservice001"
 gh_pat="[YOUR_PERSONAL_ACCESS_TOKEN]"
 
@@ -35,6 +35,7 @@ dotnet nuget push ../Packages/Play.Identity.Contracts.$version.nupkg --api-key $
 
 ## Build a Docker Image
 ```bash
+export version="1.0.3"
 export GH_OWNER=dotnetmicroservice001
 export GH_PAT="ghp_YourRealPATHere"
 docker build --secret id=GH_OWNER --secret id=GH_PAT -t play.identity:$version .
@@ -42,6 +43,15 @@ docker build --secret id=GH_OWNER --secret id=GH_PAT -t play.identity:$version .
 
 ## Run Docker Image 
 ```bash 
+export version="1.0.3"
 export adminPass="password here"
-docker run -it --rm -p 5002:5002 --name identity -e MongoDbSettings__Host=mongo -e RabbitMQSettings__Host=rabbitmq -e IdentityServerSettings__AdminUserPassword=$adminPass --network playinfra_default play.identity:$version
+export cosmosDbConnString="conn string here"
+docker run -it --rm \
+  -p 5002:5002 \
+  --name identity \
+  -e MongoDbSettings__ConnectionString=$cosmosDbConnString \
+  -e RabbitMQSettings__Host=rabbitmq \
+  -e IdentitySettings__AdminUserPassword=$adminPass \
+  --network playinfra_default \
+  play.identity:$version
 ```
