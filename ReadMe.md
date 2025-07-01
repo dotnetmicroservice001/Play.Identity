@@ -35,7 +35,7 @@ dotnet nuget push ../Packages/Play.Identity.Contracts.$version.nupkg --api-key $
 
 ## Build a Docker Image
 ```bash
-export version="1.0.3"
+version="1.0.4"
 export GH_OWNER=dotnetmicroservice001
 export GH_PAT="ghp_YourRealPATHere"
 docker build --secret id=GH_OWNER --secret id=GH_PAT -t play.identity:$version .
@@ -43,15 +43,16 @@ docker build --secret id=GH_OWNER --secret id=GH_PAT -t play.identity:$version .
 
 ## Run Docker Image 
 ```bash 
-export version="1.0.3"
+export version="1.0.4"
 export adminPass="password here"
 export cosmosDbConnString="conn string here"
+export serviceBusConnString="conn string here"
 docker run -it --rm \
   -p 5002:5002 \
   --name identity \
   -e MongoDbSettings__ConnectionString=$cosmosDbConnString \
-  -e RabbitMQSettings__Host=rabbitmq \
+  -e ServiceBusSettings__ConnectionString=$serviceBusConnString \
+  -e ServiceSettings__MessageBroker="SERVICEBUS" \
   -e IdentitySettings__AdminUserPassword=$adminPass \
-  --network playinfra_default \
   play.identity:$version
 ```
