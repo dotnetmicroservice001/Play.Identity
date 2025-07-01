@@ -38,12 +38,12 @@ dotnet nuget push ../Packages/Play.Identity.Contracts.$version.nupkg --api-key $
 version="1.0.4"
 export GH_OWNER=dotnetmicroservice001
 export GH_PAT="ghp_YourRealPATHere"
-docker build --secret id=GH_OWNER --secret id=GH_PAT -t play.identity:$version .
+export acrname="playeconomy01acr"
+docker build --secret id=GH_OWNER --secret id=GH_PAT -t "$acrname.azurecr.io/play.identity:$version" .
 ```
 
 ## Run Docker Image 
 ```bash 
-export version="1.0.4"
 export adminPass="password here"
 export cosmosDbConnString="conn string here"
 export serviceBusConnString="conn string here"
@@ -55,4 +55,10 @@ docker run -it --rm \
   -e ServiceSettings__MessageBroker="SERVICEBUS" \
   -e IdentitySettings__AdminUserPassword=$adminPass \
   play.identity:$version
+```
+
+## Publishing Docker Image 
+```bash 
+az acr login --name $acrname
+docker push "$acrname.azurecr.io/play.identity:$version"
 ```
