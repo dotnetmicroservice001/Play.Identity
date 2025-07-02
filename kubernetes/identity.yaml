@@ -20,7 +20,22 @@ spec:
           image: playeconomy01acr.azurecr.io/play.identity:1.0.4
           env:
             - name: ServiceSettings__MessageBroker
-              value: "SERVICEBUS"
+              value: SERVICEBUS
+            - name: MongoDbSettings__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: identity-secrets
+                  key: cosmosdb-connectionstring
+            - name: ServiceBusSettings__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: identity-secrets
+                  key: servicebus-connectionstring
+            - name: adminPass
+              valueFrom:
+                secretKeyRef:
+                  name: identity-secrets
+                  key: adminpassword       
           resources:
             limits:
               memory: "128Mi"
