@@ -57,10 +57,15 @@ docker run -it --rm \
   play.identity:$version
 ```
 
-## Publishing Docker Image 
-```bash 
+## 🐳 Build & Push Docker Image (M2 Mac + AKS Compatible)
+
+Build a multi-architecture image (ARM64 for local M2 Mac, AMD64 for AKS) and push to ACR:
+```bash
 az acr login --name $acrname
-docker push "$acrname.azurecr.io/play.identity:$version"
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t "$acrname.azurecr.io/play.identity:$version" \
+  --push .
 ```
 
 ## Create Kubernetes namespace 
