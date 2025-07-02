@@ -2,10 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: identity-deployment
-  labels:
-    app: identity
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: identity
@@ -31,7 +28,7 @@ spec:
                 secretKeyRef:
                   name: identity-secrets
                   key: servicebus-connectionstring
-            - name: adminPass
+            - name: IdentitySettings__AdminUserPassword
               valueFrom:
                 secretKeyRef:
                   name: identity-secrets
@@ -42,6 +39,3 @@ spec:
               cpu: "150m"
           ports:
             - containerPort: 5002
-              protocol: TCP
-      restartPolicy: Always
-      
