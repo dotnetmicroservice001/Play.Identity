@@ -17,25 +17,10 @@ spec:
       serviceAccountName: identity-serviceaccount
       containers:
         - name: identity
-          image: playeconomy01acr.azurecr.io/play.identity:1.0.5
+          image: playeconomy01acr.azurecr.io/play.identity:1.0.6
           env:
             - name: ServiceSettings__MessageBroker
-              value: SERVICEBUS
-            - name: MongoDbSettings__ConnectionString
-              valueFrom:
-                secretKeyRef:
-                  name: identity-secrets
-                  key: cosmosdb-connectionstring
-            - name: ServiceBusSettings__ConnectionString
-              valueFrom:
-                secretKeyRef:
-                  name: identity-secrets
-                  key: servicebus-connectionstring
-            - name: IdentitySettings__AdminUserPassword
-              valueFrom:
-                secretKeyRef:
-                  name: identity-secrets
-                  key: adminpassword       
+              value: SERVICEBUS       
           resources:
             limits:
               memory: "128Mi"

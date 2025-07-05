@@ -77,15 +77,6 @@ export namespace="identity"
 kubectl create namespace $namespace 
 ```
 
-## Create Kubernetes secrets
-```bash 
-kubectl create secret generic identity-secrets \
---from-literal=cosmosdb-connectionstring="$cosmosDbConnString" \
---from-literal=servicebus-connectionstring="$serviceBusConnString" \
---from-literal=adminpassword="$adminPass" \
--n "$namespace"
-```
-
 ## Create the Kubernetes Pod
 ```bash
 kubectl apply -f ./kubernetes/identity.yaml -n "$namespace"
