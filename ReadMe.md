@@ -20,7 +20,7 @@ It uses **OAuth 2.0**, **OpenID Connect**, and **PKCE** to securely authenticate
 
 ## Creating and Publishing Package
 ```bash
-version="1.0.6"
+version="1.0.7"
 owner="dotnetmicroservice001"
 gh_pat="[YOUR_PERSONAL_ACCESS_TOKEN]"
 
@@ -60,7 +60,7 @@ docker run -it --rm \
 
 Build a multi-architecture image (ARM64 for local M2 Mac, AMD64 for AKS) and push to ACR:
 ```bash
-version="1.0.6"
+version="1.0.7"
 export GH_OWNER=dotnetmicroservice001
 export GH_PAT="ghp_YourRealPATHere"
 az acr login --name $acrname
