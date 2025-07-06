@@ -8,4 +8,6 @@ public class IdentitySettings
     
     public decimal StartingGil { get; init; }
     
+    public string PathBase { get; init; }
+    
 }

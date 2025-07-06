@@ -103,6 +103,14 @@ namespace Play.Identity.Service
             }
 
             app.UseHttpsRedirection();
+            // Dynamically sets the app's request base path using a value from config
+            app.Use((context, next) =>
+            {
+               var identitySettings = Configuration.GetSection(nameof(IdentitySettings))
+                                        .Get<IdentitySettings>();
+               context.Request.PathBase = new PathString(identitySettings.PathBase);
+               return next();
+            });
             app.UseStaticFiles();
             
             app.UseRouting();

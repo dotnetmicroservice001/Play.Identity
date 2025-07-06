@@ -60,7 +60,7 @@ docker run -it --rm \
 
 Build a multi-architecture image (ARM64 for local M2 Mac, AMD64 for AKS) and push to ACR:
 ```bash
-version="1.0.7"
+version="1.0.8"
 export GH_OWNER=dotnetmicroservice001
 export GH_PAT="ghp_YourRealPATHere"
 az acr login --name $acrname
@@ -94,7 +94,7 @@ export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 az role assignment create \
   --assignee "$IDENTITY_CLIENT_ID" \
   --role "Key Vault Secrets User" \
-  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEY_VAULT_NAME"
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$appname/providers/Microsoft.KeyVault/vaults/$appname"
 
 ```
 
