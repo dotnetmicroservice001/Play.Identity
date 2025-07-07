@@ -10,4 +10,8 @@ public class IdentitySettings
     
     public string PathBase { get; init; }
     
+    public string CertificateCerFilePath { get; init; }
+    
+    public string CertificateKeyFilePath { get; init; }
+    
 }

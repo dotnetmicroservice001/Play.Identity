@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using Duende.IdentityModel;
 using GreenPipes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -29,10 +31,13 @@ namespace Play.Identity.Service
 {
     public class Startup
     {
-        public const string AllowedOriginSettings = "AllowedOrigin";
-        public Startup(IConfiguration configuration)
+        private const string AllowedOriginSettings = "AllowedOrigin";
+        private readonly IHostEnvironment _env;
+        
+        public Startup(IConfiguration configuration, IHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -44,7 +49,7 @@ namespace Play.Identity.Service
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
             var serviceSettings = Configuration.GetSection("ServiceSettings").Get<ServiceSettings>();
             var mongoDbSettings = Configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
-            var identityServerSettings = Configuration.GetSection("IdentityServerSettings").Get<IdentityServerSettings>(); 
+            
             
             
             services.Configure<IdentitySettings>(Configuration.GetSection(nameof(IdentitySettings)))
@@ -62,19 +67,7 @@ namespace Play.Identity.Service
                 retryConfigurator.Ignore(typeof(InsufficientFundException));
             });
             
-            services.AddIdentityServer(options =>
-                {
-                    options.Events.RaiseErrorEvents = true;
-                    options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseErrorEvents = true;
-                    options.KeyManagement.KeyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                })
-                .AddAspNetIdentity<ApplicationUser>()
-                .AddInMemoryApiScopes(identityServerSettings.ApiScopes)
-                .AddInMemoryApiResources(identityServerSettings.ApiResources)
-                .AddInMemoryClients(identityServerSettings.Clients)
-                .AddInMemoryIdentityResources(identityServerSettings.IdentityResources)
-                .AddDeveloperSigningCredential();
+            AddIdentityServer(services);
 
             services.AddLocalApiAuthentication();
             services.AddControllers();
@@ -94,6 +87,7 @@ namespace Play.Identity.Service
             });
 
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -138,6 +132,35 @@ namespace Play.Identity.Service
                 endpoints.MapRazorPages();
                 endpoints.MapPlayEconomyHealthChecks();
             });
+        }
+        
+        
+        private void AddIdentityServer(IServiceCollection services)
+        {
+            
+            var identityServerSettings = Configuration.GetSection("IdentityServerSettings").Get<IdentityServerSettings>(); 
+            var builder = services.AddIdentityServer(options =>
+                {
+                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseErrorEvents = true;
+                    options.KeyManagement.KeyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                })
+                .AddAspNetIdentity<ApplicationUser>()
+                .AddInMemoryApiScopes(identityServerSettings.ApiScopes)
+                .AddInMemoryApiResources(identityServerSettings.ApiResources)
+                .AddInMemoryClients(identityServerSettings.Clients)
+                .AddInMemoryIdentityResources(identityServerSettings.IdentityResources);
+
+            if (!_env.IsDevelopment())
+            {
+                var identitySettings = Configuration.GetSection(nameof(IdentitySettings)).Get<IdentitySettings>();
+                var cert = X509Certificate2.CreateFromPemFile(
+                    identitySettings.CertificateCerFilePath,
+                    identitySettings.CertificateKeyFilePath
+                );
+                builder.AddSigningCredential(cert);
+            }
         }
     }
 }

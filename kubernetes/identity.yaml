@@ -17,7 +17,7 @@ spec:
       serviceAccountName: identity-serviceaccount
       containers:
         - name: identity
-          image: playeconomy01acr.azurecr.io/play.identity:1.0.9
+          image: playeconomy01acr.azurecr.io/play.identity:1.0.10
           env:
             - name: ServiceSettings__MessageBroker
               value: SERVICEBUS
