@@ -77,11 +77,6 @@ export namespace="identity"
 kubectl create namespace $namespace 
 ```
 
-## Create the Kubernetes Pod
-```bash
-kubectl apply -f ./kubernetes/identity.yaml -n "$namespace"
-```
-
 ## Creating Azure Managed Identity and granting it access to Key Vault Store 
 ```bash
 export appname=playeconomy-01
@@ -103,11 +98,6 @@ az role assignment create \
 export AKS_OIDC_ISSUER="$(az aks show -n $appname -g $appname --query "oidcIssuerProfile.issuerUrl" -otsv)"
 
 az identity federated-credential create --name ${namespace} --identity-name "${namespace}" --resource-group "${appname}" --issuer "${AKS_OIDC_ISSUER}" --subject system:serviceaccount:"${namespace}":"${namespace}-serviceaccount" --audience api://AzureADTokenExchange
-```
-
-## Create signing certificate 
-```bash
-kubectl apply -f ./kubernetes/signing-cert.yaml -n "$namespace"
 ```
 
 ## install helm chart 
