@@ -60,7 +60,7 @@ docker run -it --rm \
 
 Build a multi-architecture image (ARM64 for local M2 Mac, AMD64 for AKS) and push to ACR:
 ```bash
-version="1.0.10"
+version="1.0.11"
 export GH_OWNER=dotnetmicroservice001
 export GH_PAT="ghp_YourRealPATHere"
 az acr login --name $acrname
