@@ -102,6 +102,11 @@ az identity federated-credential create --name ${namespace} --identity-name "${n
 
 ## install helm chart 
 ```bash 
+helmUser="00000000-0000-0000-0000-000000000000"
+helmPassword=$(az acr login --name playeconomy01acr --expose-token --output tsv --query accessToken)
+helm registry login playeconomy01acr.azurecr.io --username $helmUser --password $helmPassword 
 
-helm install identity-service ./helm -f ./helm/values.yaml -n $namespace
+chartVersion="0.1.0"
+helm upgrade identity-service oci://playeconomy01acr.azurecr.io/helm/microservice --version $chartVersion -f ./helm/values.yaml -n $namespace --install
 ```
+
