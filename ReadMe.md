@@ -109,3 +109,9 @@ az identity federated-credential create --name ${namespace} --identity-name "${n
 ```bash
 kubectl apply -f ./kubernetes/signing-cert.yaml -n "$namespace"
 ```
+
+## install helm chart 
+```bash 
+
+helm install identity-service ./helm -f ./helm/values.yaml -n $namespace
+```
