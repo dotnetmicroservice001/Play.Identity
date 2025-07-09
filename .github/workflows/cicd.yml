@@ -45,7 +45,7 @@ jobs:
         dotnet-version: 8.0.x
         source-url: "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json"
       env: 
-        NUGET_AUTH_TOKEN: ${{ secrets.GH_PAT }}
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Pack
       run: |
@@ -58,24 +58,22 @@ jobs:
       run: dotnet nuget push Packages/*.nupkg
 
   build-deploy-service:
-    runs-on: ubuntu-latest
-    needs: generate-version
-
-    env:
-      APP_NAME: playeconomy01
-      ACR_NAME: playeconomy01acr
-
-    steps:
+   runs-on: ubuntu-latest
+   needs: generate-version
+   env:
+    APP_NAME: playeconomy01
+    ACR_NAME: playeconomy01acr
+   steps:
     - uses: actions/checkout@v4
-    
+
     - name: Build and push Docker images
       uses: docker/build-push-action@v6.18.0
       with:
-        secrets: | 
-         GH_OWNER= ${{github.repository_owner}} 
-         GH_PAT= ${{secrets.GH_PAT}}
-   
-        tags: "${{env.ACR_NAME}}.azurecr.io/play.identity:${{ needs.generate-version.outputs.new-version}}" 
+        secrets: |
+          GH_OWNER=${{ github.repository_owner }}
+          GH_PAT=${{ secrets.GH_PAT }}
+        tags: "${{ env.ACR_NAME }}.azurecr.io/play.identity:${{ needs.generate-version.outputs.new-version }}"
+ 
     
     
 
