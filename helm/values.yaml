@@ -1,15 +1,15 @@
 microserviceName: "identity"
 
 image: 
-  repository: playeconomy01acr.azurecr.io/play.identity
+  repository: playeconomyapp.azurecr.io/play.identity
   tag : 1.0.11
   
 envVariables:
   IdentitySettings__PathBase: /identity-svc
   IdentitySettings__CertificateCerFilePath: "/certificates/certificate.crt"
   IdentitySettings__CertificateKeyFilePath: "/certificates/certificate.key"
-  IdentityServerSettings__Clients__1__RedirectUris__1: https://playeconomy-01.westus.cloudapp.azure.com/authentication/login-callback
-  IdentityServerSettings__Clients__1__PostLogoutRedirectUris__1: https://playeconomy-01.westus.cloudapp.azure.com/authentication/logout-callback
+  IdentityServerSettings__Clients__1__RedirectUris__1: https://playeconomyapp.westus.cloudapp.azure.com/authentication/login-callback
+  IdentityServerSettings__Clients__1__PostLogoutRedirectUris__1: https://playeconomyapp.westus.cloudapp.azure.com/authentication/logout-callback
     
 resources:
   limits:
@@ -33,7 +33,7 @@ volumes:
 
 certificate:
   secretName: signing-cert
-  hostname: "playeconomy-01.westus.cloudapp.azure.com"
+  hostname: "playeconomyapp.westus.cloudapp.azure.com"
     
 identityClientId: 3871e3f8-5b77-45b9-b3ba-9b43cc38e3a4
     

@@ -37,8 +37,7 @@ dotnet nuget push ../Packages/Play.Identity.Contracts.$version.nupkg --api-key $
 ```bash
 export GH_OWNER=dotnetmicroservice001
 export GH_PAT="ghp_YourRealPATHere"
-export acrname="playeconomy01acr"
-docker build --secret id=GH_OWNER --secret id=GH_PAT -t "$acrname.azurecr.io/play.identity:$version" .
+docker build --secret id=GH_OWNER --secret id=GH_PAT -t "$appname.azurecr.io/play.identity:$version" .
 ```
 
 ## Run Docker Image 
@@ -60,14 +59,15 @@ docker run -it --rm \
 
 Build a multi-architecture image (ARM64 for local M2 Mac, AMD64 for AKS) and push to ACR:
 ```bash
-version="1.0.11"
+version="1.0.12"
 export GH_OWNER=dotnetmicroservice001
 export GH_PAT="ghp_YourRealPATHere"
-az acr login --name $acrname
+export appname="playeconomyapp"
+az acr login --name $appname
 docker buildx build \
   --platform linux/amd64 \
   --secret id=GH_OWNER --secret id=GH_PAT \
-  -t "$acrname.azurecr.io/play.identity:$version" \
+  -t "$appname.azurecr.io/play.identity:$version" \
   --push .
 ```
 
@@ -79,7 +79,7 @@ kubectl create namespace $namespace
 
 ## Creating Azure Managed Identity and granting it access to Key Vault Store 
 ```bash
-export appname=playeconomy-01
+export appname=playeconomyapp
 export namespace="identity"
 az identity create --resource-group $appname --name $namespace 
 
@@ -103,10 +103,12 @@ az identity federated-credential create --name ${namespace} --identity-name "${n
 ## install helm chart 
 ```bash 
 helmUser="00000000-0000-0000-0000-000000000000"
-helmPassword=$(az acr login --name playeconomy01acr --expose-token --output tsv --query accessToken)
-helm registry login playeconomy01acr.azurecr.io --username $helmUser --password $helmPassword 
+helmPassword=$(az acr login --name playeconomyapp --expose-token --output tsv --query accessToken)
+helm registry login playeconomyapp.azurecr.io --username $helmUser --password $helmPassword 
 
 chartVersion="0.1.0"
-helm upgrade identity-service oci://playeconomy01acr.azurecr.io/helm/microservice --version $chartVersion -f ./helm/values.yaml -n $namespace --install
+helm upgrade identity-service oci://playeconomyapp.azurecr.io/helm/microservice --version $chartVersion -f ./helm/values.yaml -n $namespace --install
 ```
 
+## Required repository secrets for github workflow
+create GH_PAT -> profile - settings - developer settings - PAT with repo and read access
