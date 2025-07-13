@@ -97,7 +97,7 @@ jobs:
     - name: Helm tool installer
       uses: Azure/setup-helm@v3
       with:
-        version: 
+        version: v3.18.3 
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Login to Helm Registry
