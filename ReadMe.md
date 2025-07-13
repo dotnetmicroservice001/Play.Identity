@@ -114,3 +114,13 @@ helm upgrade identity-service oci://$appname.azurecr.io/helm/microservice --vers
 
 ## Required repository secrets for github workflow
 create GH_PAT -> profile - settings - developer settings - PAT with repo and read access
+
+## Create Github service principal
+```bash
+export appId=$(az ad sp create-for-rbac -n "Github" --query appId --output -tsv)
+  
+scope=/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$appname
+az role assignment create --assignee $appId --role "AcrPush" --scope $scope
+az role assignment create --assignee $appId --role "Azure Kubernetes Service Cluster User Role" --scope $scope
+az role assignment create --assignee $appId --role "Azure Kubernetes Service Contributor Role" --scope $scope
+```
