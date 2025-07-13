@@ -112,7 +112,7 @@ jobs:
         --version ${{env.HELM_CHART_VERSION}} \
         -f ./helm/values.yaml \
         -n ${{env.SERVICE_NAME}} \
-        -- set image.tag=${{ needs.generate-version.outputs.new-version }} \
+        --set image.tag=${{ needs.generate-version.outputs.new-version }} \
         --install \
         --wait
     
