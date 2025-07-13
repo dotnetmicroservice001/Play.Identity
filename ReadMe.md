@@ -59,7 +59,7 @@ docker run -it --rm \
 
 Build a multi-architecture image (ARM64 for local M2 Mac, AMD64 for AKS) and push to ACR:
 ```bash
-version="1.0.12"
+version="1.0.13"
 export GH_OWNER=dotnetmicroservice001
 export GH_PAT="ghp_YourRealPATHere"
 export appname="playeconomyapp"
@@ -75,6 +75,8 @@ docker buildx build \
 ```bash 
 export namespace="identity"
 kubectl create namespace $namespace 
+
+kubectl apply -f ./kubernetes/${namespace}.yaml -n "$namespace"
 ```
 
 ## Creating Azure Managed Identity and granting it access to Key Vault Store 
@@ -103,11 +105,11 @@ az identity federated-credential create --name ${namespace} --identity-name "${n
 ## install helm chart 
 ```bash 
 helmUser="00000000-0000-0000-0000-000000000000"
-helmPassword=$(az acr login --name playeconomyapp --expose-token --output tsv --query accessToken)
-helm registry login playeconomyapp.azurecr.io --username $helmUser --password $helmPassword 
+helmPassword=$(az acr login --name $appname --expose-token --output tsv --query accessToken)
+helm registry login $appname.azurecr.io --username $helmUser --password $helmPassword 
 
 chartVersion="0.1.0"
-helm upgrade identity-service oci://playeconomyapp.azurecr.io/helm/microservice --version $chartVersion -f ./helm/values.yaml -n $namespace --install
+helm upgrade identity-service oci://$appname.azurecr.io/helm/microservice --version $chartVersion -f ./helm/values.yaml -n $namespace --install
 ```
 
 ## Required repository secrets for github workflow
