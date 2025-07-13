@@ -62,6 +62,8 @@ jobs:
    needs: generate-version
    env:
     APP_NAME: playeconomyapp
+    SERVICE_NAME: identity
+    HELM_CHART_VERSION : 0.1.0
     
    permissions: 
     id-token: write 
@@ -78,7 +80,7 @@ jobs:
        subscription-id: ${{ secrets.AZURE_SUBSCIPRTION_ID }}
        
     - name: Login to container registry
-      run: az acr login -name ${{env.APP_NAME}}
+      run: az acr login --name ${{env.APP_NAME}}
     
     - name: Build and push Docker images
       uses: docker/build-push-action@v6.18.0
@@ -89,7 +91,30 @@ jobs:
         tags: "${{ env.APP_NAME }}.azurecr.io/play.identity:${{ needs.generate-version.outputs.new-version }}"
         push: true
  
-    
+    - name: Get AKS credentials 
+      run: az aks get-credentials --resource-group ${{ env.APP_NAME }} --name ${{ env.APP_NAME }}
+
+    - name: Helm tool installer
+      uses: Azure/setup-helm@v3
+      with:
+        version: 
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Login to Helm Registry
+      run: | 
+        helmUser="00000000-0000-0000-0000-000000000000"
+        helmPassword=$(az acr login --name ${{ env.APP_NAME }} --expose-token --output tsv --query accessToken)
+        helm registry login ${{ env.APP_NAME }}.azurecr.io --username $helmUser --password $helmPassword
+        
+    - name: Deploy helm chart 
+      run: |
+        helm upgrade ${{env.SERVICE_NAME}}-service oci://${{ env.APP_NAME }}.azurecr.io/helm/microservice \
+        --version ${{env.HELM_CHART_VERSION}} \
+        -f ./helm/values.yaml \
+        -n ${{env.SERVICE_NAME}} \
+        -- set image.tag=${{ needs.generate-version.outputs.new-version }} \
+        --install \
+        --wait
     
 
     

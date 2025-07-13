@@ -118,6 +118,7 @@ AZURE_CLIENT_ID -> from ad app registration
 AZURE_SUBSCIPRTION_ID -> from azure subscription portal
 AZURE_TENANT_ID -> from microsoft entra id 
 
+
 ## Create Github service principal
 ```bash
 export appId=$(az ad sp create-for-rbac -n "Github" --query appId --output -tsv)
