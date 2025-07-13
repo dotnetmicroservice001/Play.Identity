@@ -113,7 +113,10 @@ helm upgrade identity-service oci://$appname.azurecr.io/helm/microservice --vers
 ```
 
 ## Required repository secrets for github workflow
-create GH_PAT -> profile - settings - developer settings - PAT with repo and read access
+GH_PAT -> profile - settings - developer settings - PAT with repo and read access
+AZURE_CLIENT_ID -> from ad app registration 
+AZURE_SUBSCIPRTION_ID -> from azure subscription portal
+AZURE_TENANT_ID -> from microsoft entra id 
 
 ## Create Github service principal
 ```bash

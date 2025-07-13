@@ -71,14 +71,14 @@ jobs:
     - uses: actions/checkout@v4
       
     - name: Azure Login
-   uses: Azure/login@v2.3.0
-   with:
-     client-id: ${{ secrets.CLIENT_ID }}
-     tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-     subscription-id: ${{ secrets.AZURE_SUBSCIPRTION_ID }}
+      uses: Azure/login@v2.3.0
+      with:
+       client-id: ${{ secrets.CLIENT_ID }}
+       tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+       subscription-id: ${{ secrets.AZURE_SUBSCIPRTION_ID }}
        
        
-       - name: Build and push Docker images
+    - name: Build and push Docker images
       uses: docker/build-push-action@v6.18.0
       with:
         secrets: |
