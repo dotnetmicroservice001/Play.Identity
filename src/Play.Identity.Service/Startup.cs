@@ -17,6 +17,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using Play.Common.HealthChecks;
 using Play.Common.Logging;
 using Play.Common.MassTransit;
+using Play.Common.OpenTelemetry;
 using Play.Common.Settings;
 using Play.Identity.Service.Entities;
 using Play.Identity.Service.Exception;
@@ -55,7 +56,8 @@ namespace Play.Identity.Service
                     mongoDbSettings.ConnectionString,
                     serviceSettings.ServiceName
                     );
-            services.AddSeqLogging(Configuration);
+            services.AddSeqLogging(Configuration)
+                .AddTracing(Configuration);
             
             services.AddMassTransitWithMessageBroker(Configuration, retryConfigurator =>
             {
