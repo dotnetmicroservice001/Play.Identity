@@ -2,7 +2,7 @@ microserviceName: "identity"
 
 image: 
   repository: playeconomyapp.azurecr.io/play.identity
-  tag : 1.0.13
+  tag : 1.0.20
   
 envVariables:
   IdentitySettings__PathBase: /identity-svc

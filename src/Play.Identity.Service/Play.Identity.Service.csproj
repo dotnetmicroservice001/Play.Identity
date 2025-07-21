@@ -11,8 +11,7 @@
     <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
-    <PackageReference Include="Play.Common" Version="1.0.25" />
+    <PackageReference Include="Play.Common" Version="1.0.30" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     
   </ItemGroup>

@@ -56,6 +56,7 @@ namespace Play.Identity.Service
                     mongoDbSettings.ConnectionString,
                     serviceSettings.ServiceName
                     );
+            
             services.AddSeqLogging(Configuration)
                 .AddTracing(Configuration)
                 .AddMetrics(Configuration);
@@ -111,10 +112,13 @@ namespace Play.Identity.Service
             // Dynamically sets the app's request base path using a value from config
             app.Use((context, next) =>
             {
-               var identitySettings = Configuration.GetSection(nameof(IdentitySettings))
-                                        .Get<IdentitySettings>();
-               context.Request.PathBase = new PathString(identitySettings.PathBase);
-               return next();
+                var path = context.Request.Path;
+                if (!path.StartsWithSegments("/health") && !path.StartsWithSegments("/metrics"))
+                {
+                    var identitySettings = Configuration.GetSection(nameof(IdentitySettings)).Get<IdentitySettings>();
+                    context.Request.PathBase = new PathString(identitySettings.PathBase);
+                }
+                return next();
             });
             app.UseStaticFiles();
             
