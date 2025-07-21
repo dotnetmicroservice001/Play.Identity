@@ -57,7 +57,8 @@ namespace Play.Identity.Service
                     serviceSettings.ServiceName
                     );
             services.AddSeqLogging(Configuration)
-                .AddTracing(Configuration);
+                .AddTracing(Configuration)
+                .AddMetrics(Configuration);
             
             services.AddMassTransitWithMessageBroker(Configuration, retryConfigurator =>
             {
@@ -105,6 +106,7 @@ namespace Play.Identity.Service
                 }); 
             }
 
+            app.UseOpenTelemetryPrometheusScrapingEndpoint();
             app.UseHttpsRedirection();
             // Dynamically sets the app's request base path using a value from config
             app.Use((context, next) =>
