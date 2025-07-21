@@ -160,11 +160,12 @@ namespace Play.Identity.Service
             if (!_env.IsDevelopment())
             {
                 var identitySettings = Configuration.GetSection(nameof(IdentitySettings)).Get<IdentitySettings>();
-                var cert = X509Certificate2.CreateFromPemFile(
-                    identitySettings.CertificateCerFilePath,
-                    identitySettings.CertificateKeyFilePath
-                );
-                builder.AddSigningCredential(cert);
+                // var cert = X509Certificate2.CreateFromPemFile(
+                //     identitySettings.CertificateCerFilePath,
+                //     identitySettings.CertificateKeyFilePath
+                // );
+                //builder.AddSigningCredential(cert);
+                builder.AddDeveloperSigningCredential();
             }
         }
     }
