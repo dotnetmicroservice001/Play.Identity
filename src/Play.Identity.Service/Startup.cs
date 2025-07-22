@@ -80,8 +80,11 @@ namespace Play.Identity.Service
             services.AddHealthChecks()
                 .AddMongoDb();
 
+            // headers to be forwarded
             services.Configure<ForwardedHeadersOptions>(options =>
             {
+                // identifies originating ip
+                // identifying protocol
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
@@ -93,6 +96,7 @@ namespace Play.Identity.Service
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // middleware
             app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
@@ -160,12 +164,11 @@ namespace Play.Identity.Service
             if (!_env.IsDevelopment())
             {
                 var identitySettings = Configuration.GetSection(nameof(IdentitySettings)).Get<IdentitySettings>();
-                // var cert = X509Certificate2.CreateFromPemFile(
-                //     identitySettings.CertificateCerFilePath,
-                //     identitySettings.CertificateKeyFilePath
-                // );
-                //builder.AddSigningCredential(cert);
-                builder.AddDeveloperSigningCredential();
+                 var cert = X509Certificate2.CreateFromPemFile(
+                     identitySettings.CertificateCerFilePath,
+                     identitySettings.CertificateKeyFilePath
+                 );
+                builder.AddSigningCredential(cert);
             }
         }
     }
